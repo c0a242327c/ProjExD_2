@@ -1,3 +1,4 @@
+
 import os
 import random
 import sys
@@ -62,6 +63,29 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     return bb_imgs, bb_accs
 
 
+def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
+    """
+    移動量の合計値タプルに対応する向きの画像Surfaceを返す
+    """
+    kk_base = pg.image.load("fig/3.png")
+    kk_img = pg.transform.rotozoom(kk_base, 0, 0.9)
+    kk_img2 = pg.transform.flip(kk_img, True, False)
+
+    directions = {
+        (0, 0): kk_img2,
+        (+5, 0): pg.transform.rotozoom(kk_img2, 0, 1.0),
+        (0, +5): pg.transform.rotozoom(kk_img, 90, 1.0),
+        (-5, 0): pg.transform.rotozoom(kk_img, 0, 1.0),
+        (0, -5): pg.transform.rotozoom(kk_img2, 90, 1.0),
+        (+5, -5): pg.transform.rotozoom(kk_img2, 45, 1.0),
+        (-5, -5): pg.transform.rotozoom(kk_img, -45, 1.0),
+        (-5, +5): pg.transform.rotozoom(kk_img, 45, 1.0),
+        (+5, +5): pg.transform.rotozoom(kk_img2, -45, 1.0)
+    }
+
+    return directions.get(sum_mv, kk_img2)
+
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -78,7 +102,6 @@ def main():
     bb_rct.centery = random.randint(0,HEIGHT) # 横座標
     vx, vy = +5, +5  # 爆弾の移動速度
     
-
 
     clock = pg.time.Clock()
     tmr = 0
@@ -104,6 +127,7 @@ def main():
             if key_lst[key]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
+        kk_img = get_kk_img(tuple(sum_mv))  # 方向に応じて画像切り替え
         # if key_lst[pg.K_UP]:
         #     sum_mv[1] -= 5
         # if key_lst[pg.K_DOWN]:
@@ -132,4 +156,4 @@ if __name__ == "__main__":
     pg.init()
     main()
     pg.quit()
-    sys.exit()
+    sys.exit()        
