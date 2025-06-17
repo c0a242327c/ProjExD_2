@@ -86,7 +86,6 @@ def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
     return directions.get(sum_mv, kk_img2)
 
 
-
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
